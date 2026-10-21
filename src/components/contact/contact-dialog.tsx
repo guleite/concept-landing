@@ -103,6 +103,12 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
       <DialogContent
         ref={contentRef}
         closeLabel={contactForm.close}
+        // Computador e tablet: painel largo em duas colunas, que cabe na tela sem rolar.
+        // Celular: ocupa a tela inteira e rola como uma página.
+        className={cn(
+          "gap-0 md:max-w-[min(64rem,calc(100%-3rem))] md:p-9 [scrollbar-width:thin]",
+          "max-sm:top-0 max-sm:left-0 max-sm:h-dvh max-sm:max-h-none max-sm:max-w-none max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-none max-sm:ring-0 max-sm:pt-8",
+        )}
         // Abre com o foco no painel (título visível, sem abrir o teclado do celular).
         onOpenAutoFocus={(event) => {
           event.preventDefault()
@@ -110,15 +116,23 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
           contentRef.current?.focus({ preventScroll: true })
         }}
       >
-        <DialogHeader className="gap-3 pr-10">
-          <Badge variant="note" className="note-brackets">
-            {contactForm.tag}
-          </Badge>
-          <DialogTitle className="type-h2">{contactForm.title}</DialogTitle>
-          <DialogDescription className="text-base text-ink-muted">{contactForm.description}</DialogDescription>
-        </DialogHeader>
-
-        <form ref={formRef} noValidate onSubmit={onSubmit} className="flex flex-col gap-6">
+        <form
+          ref={formRef}
+          noValidate
+          onSubmit={onSubmit}
+          className="grid gap-x-12 gap-y-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]"
+        >
+          {/* No celular as colunas se desfazem e o campo opcional vai para o fim, antes do botão. */}
+          <div className="flex flex-col gap-6 max-md:contents">
+          <DialogHeader className="gap-3 pr-10">
+            <Badge variant="note" className="note-brackets">
+              {contactForm.tag}
+            </Badge>
+            <DialogTitle className="type-h2 md:type-h3 md:[@media(min-height:880px)]:type-h2">
+              {contactForm.title}
+            </DialogTitle>
+            <DialogDescription className="text-base text-ink-muted">{contactForm.description}</DialogDescription>
+          </DialogHeader>
           <div className="grid gap-4 sm:grid-cols-2">
             <TextField
               name="name"
@@ -155,6 +169,15 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
             <label htmlFor="contact-hp">Não preencha</label>
             <input id="contact-hp" name="contact_hp" type="text" tabIndex={-1} autoComplete="off" />
           </div>
+          <TextAreaField
+            name="bottleneck"
+            label={fields.bottleneck.label}
+            placeholder={fields.bottleneck.placeholder}
+            className="max-md:order-last"
+          />
+          </div>
+
+          <div className="flex flex-col gap-5 md:pt-1">
           <ChoiceField
             name="segment"
             label={fields.segment.label}
@@ -183,10 +206,10 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
             error={errors.crm}
             onChange={() => clearError("crm")}
           />
-          <TextAreaField name="bottleneck" label={fields.bottleneck.label} placeholder={fields.bottleneck.placeholder} />
+          </div>
 
-          <div className="flex flex-col gap-4 border-t border-grid pt-5 sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-[30em] text-sm text-ink-muted">{contactForm.privacy}</p>
+          <div className="flex flex-col gap-4 border-t border-grid pt-5 sm:flex-row sm:items-center sm:justify-between max-md:order-last md:col-span-2">
+            <p className="max-w-[30em] text-sm text-ink-muted md:max-w-[44em]">{contactForm.privacy}</p>
             <Button type="submit" size="lg" className="shrink-0">
               <ArrowText text={contactForm.submit} />
             </Button>
@@ -233,7 +256,7 @@ type TextAreaFieldProps = Omit<ComponentProps<"textarea">, "name"> & { name: Fie
 function TextAreaField({ name, label, className, ...textarea }: TextAreaFieldProps) {
   const id = useId()
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn("flex flex-col gap-2", className)}>
       <label htmlFor={id} className="type-note text-ink-muted">
         {label}
       </label>
@@ -242,7 +265,7 @@ function TextAreaField({ name, label, className, ...textarea }: TextAreaFieldPro
         id={id}
         name={name}
         maxLength={500}
-        className={cn("min-h-24 bg-transparent px-3.5 py-3 text-base md:text-base", className)}
+        className="min-h-20 bg-transparent px-3.5 py-3 text-base md:text-base"
       />
     </div>
   )
@@ -255,13 +278,21 @@ function ChoiceField({ name, label, options, error, onChange }: ChoiceFieldProps
   const id = useId()
   return (
     <fieldset aria-describedby={error ? `${id}-error` : undefined}>
-      <legend className="type-note mb-2.5 text-ink-muted">{label}</legend>
-      <div className="flex flex-wrap gap-2">
+      {/* O erro fica na mesma linha do título do grupo, para o painel não crescer. */}
+      <legend className="mb-2 flex flex-wrap items-baseline gap-x-3">
+        <span className="type-note text-ink-muted">{label}</span>
+        {error && (
+          <span id={`${id}-error`} className="text-sm text-destructive">
+            {error}
+          </span>
+        )}
+      </legend>
+      <div className="flex flex-wrap gap-1.5">
         {options.map((option) => (
           <label
             key={option}
             data-cursor={extras.cursor.button}
-            className="inline-flex cursor-pointer items-center rounded-lg border border-line-strong px-3.5 py-2 text-[0.9375rem] leading-tight transition-colors duration-200 select-none hover:border-accent-blue hover:text-accent-text has-checked:border-accent-blue has-checked:bg-accent-blue has-checked:text-surface has-checked:hover:text-surface has-focus-visible:ring-3 has-focus-visible:ring-ring/50"
+            className="inline-flex cursor-pointer items-center rounded-lg border border-line-strong px-3 py-1.5 text-[0.875rem] leading-tight transition-colors duration-200 select-none hover:border-accent-blue hover:text-accent-text has-checked:border-accent-blue has-checked:bg-accent-blue has-checked:text-surface has-checked:hover:text-surface has-focus-visible:ring-3 has-focus-visible:ring-ring/50"
           >
             <input
               type="radio"
@@ -274,9 +305,6 @@ function ChoiceField({ name, label, options, error, onChange }: ChoiceFieldProps
             {option}
           </label>
         ))}
-      </div>
-      <div className="mt-2">
-        <FieldError id={`${id}-error`} message={error} />
       </div>
     </fieldset>
   )
