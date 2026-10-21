@@ -1,0 +1,85 @@
+/*
+ * Design System
+ *
+ * Cores, fontes e escala de tipo: valores do CSS publicado no site original
+ * (piergorelli.com). Espaçamento, raios e sombras: do Design System gerado
+ * pelo Clonador de Sites.
+ *
+ * O Clonador tinha extraído outras cores e fontes. Para comparar:
+ *   acento   #0952EA → #2F5BFF      fundo   #F6F5F1 → #F4F4F0
+ *   texto    #161513 → #0E0E0D      apagado #6E6B65 → #65655F
+ *   linhas   #DFDDD6 → texto a 14%
+ *   fontes   Instrument Serif + system-ui + Geist Mono → Geist + Geist Mono
+ *
+ * Ligação com Tailwind v4 + shadcn/ui (veja @theme em src/index.css):
+ *   cores   → bg-canvas, bg-raised, text-ink, text-ink-muted, bg-accent-blue,
+ *             text-accent-text, bg-accent-soft, border-grid, border-line-strong
+ *   espaço  → escala padrão do Tailwind: 1 = xs, 2 = sm, 4 = md, 6 = lg, 12 = xl
+ *   raio    → rounded-sm / rounded-md / rounded-lg (2 / 6 / 24px)
+ *   sombra  → shadow-sm / shadow-md / shadow-lg
+ * O reset fica dentro de @layer para não sobrescrever os utilitários do Tailwind.
+ */
+
+:root {
+  /* Colors */
+  --color-accent-blue-primary: #2F5BFF;       /* acento: preenchimentos, pontos, botões */
+  --color-accent-blue-text: #2A52F0;          /* acento em texto (um pouco mais escuro, mais contraste) */
+  --color-canvas-background: #F4F4F0;         /* fundo da página */
+  --color-surface-raised: #ECECE6;            /* painéis das ilustrações */
+  --color-text-primary: #0E0E0D;              /* texto, traços dos SVGs */
+  --color-text-muted--note: #65655F;          /* notas, legendas, texto secundário */
+  --color-surface-white: #FFFFFF;             /* texto sobre o acento */
+  --color-grid--blueprint-border: #0E0E0D24;  /* linhas e grades (texto a 14%) */
+  --color-grid--line-strong: #0E0E0D52;       /* réguas e contornos de botões (texto a 32%) */
+  --color-accent-surface-light: color-mix(in srgb, var(--color-accent-blue-primary) 8%, var(--color-canvas-background));
+
+  /* Typography */
+  --font-family-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: "Geist Mono Variable", ui-monospace, "SF Mono", monospace;
+  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.875rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --step-1: clamp(1.25rem, 1.13rem + 0.6vw, 1.625rem);
+  --step-2: clamp(1.6rem, 1.3rem + 1.4vw, 2.5rem);
+  --step-3: clamp(2.2rem, 1.5rem + 3.2vw, 4.5rem);
+  --step-5: clamp(3.6rem, 1.2rem + 11vw, 14rem);
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 48px;
+
+  /* Border Radius */
+  --radius-sm: 2px;
+  --radius-md: 6px;
+  --radius-lg: 24px;
+
+  /* Shadows */
+  --shadow-sm: none;
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  /* Original CSS Variables */
+  --fill: 0;
+  --theme: light;
+}
+
+@layer base {
+  /* Reset */
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; }
+  body { line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  img, picture, video, canvas, svg { display: block; max-width: 100%; }
+  input, button, textarea, select { font: inherit; }
+  p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
+}
+
+@layer components {
+  /* Spacing (classes originais sem equivalente no Tailwind) */
+  .space-xs { --space: var(--space-xs); padding: var(--space-xs); }
+  .space-sm { --space: var(--space-sm); padding: var(--space-sm); }
+  .space-md { --space: var(--space-md); padding: var(--space-md); }
+  .space-lg { --space: var(--space-lg); padding: var(--space-lg); }
+  .space-xl { --space: var(--space-xl); padding: var(--space-xl); }
+}
