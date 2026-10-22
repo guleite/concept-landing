@@ -2,7 +2,7 @@
 
 Landing page da Concept (marketing com IA, dados, CRM e gestão comercial), em React + Vite + Tailwind CSS v4 + shadcn/ui + React Router. O visual e as animações vêm da recriação de https://piergorelli.com/services/ai-for-agencies/ (pasta `piergorelli-ai-for-agencies`).
 
-No ar: **https://guleite.github.io/concept-landing/**
+No ar: **https://lp.conceptagencia.com.br/** (GitHub Pages com domínio próprio, DNS no Cloudflare)
 
 ## Como rodar
 
@@ -23,8 +23,6 @@ Abre em http://localhost:5173. Para a versão final: `npm run build` (gera `dist
 | `/cases/lux-tree` | Case Lux Tree |
 | `/cases/gestor-performance` | Case Gestor Performance |
 
-No GitHub Pages os endereços ficam dentro de `/concept-landing/` (ex.: https://guleite.github.io/concept-landing/cases/lux-tree).
-
 Para criar um case novo, adicione um item na lista `cases` em `src/content.ts`. A página, o link na lista e a cópia para o GitHub Pages aparecem sozinhos.
 
 ## Publicação (GitHub Pages)
@@ -33,11 +31,11 @@ Cada push na branch `main` publica o site (`.github/workflows/deploy.yml`). O an
 
 O workflow roda `npm run build:pages`, que:
 
-- gera o site para a pasta `/concept-landing/`;
+- gera o site para a raiz do domínio (`/`);
 - copia a página para `cases/<slug>/index.html`, para os links diretos dos cases abrirem normalmente;
 - cria o `404.html`, que mostra a página "não encontrada" do site nos endereços que não existem.
 
-Para publicar em outro lugar (domínio próprio, Vercel, Netlify), use `npm run build`, que gera o site para a raiz (`/`), e configure o servidor para devolver o `index.html` em qualquer endereço. Se o domínio mudar, cadastre o novo endereço no CRM (veja "Ligação com o CRM").
+O domínio fica em `public/CNAME` e em Settings → Pages do repositório. Se o domínio mudar, troque nos dois lugares e cadastre o novo endereço no CRM (veja "Ligação com o CRM").
 
 ## Formulário de contato
 
@@ -52,7 +50,7 @@ Se o CRM não responder, o WhatsApp abre do mesmo jeito. Perguntas, opções e o
 
 Quem recebe o lead é a função `site-lead` do CRM (repositório `sales-flow-buddy-10`). O endereço dela e a chave do formulário ficam em `crmIntake`, em `src/content.ts`.
 
-A chave aparece no código do site, como em qualquer formulário público. A proteção fica no CRM: ele só aceita envios dos endereços cadastrados, descarta robôs (campo invisível preenchido ou envio rápido demais) e aceita até 5 envios a cada 10 minutos por visitante. A chave e os endereços aceitos ficam no cadastro `site_form` da tabela `integration_configs` do CRM; hoje são `https://guleite.github.io` e o localhost.
+A chave aparece no código do site, como em qualquer formulário público. A proteção fica no CRM: ele só aceita envios dos endereços cadastrados, descarta robôs (campo invisível preenchido ou envio rápido demais) e aceita até 5 envios a cada 10 minutos por visitante. A chave e os endereços aceitos ficam no cadastro `site_form` da tabela `integration_configs` do CRM; hoje são `https://lp.conceptagencia.com.br`, `https://conceptagencia.com.br` (com e sem www), `https://guleite.github.io` e o localhost. Cada subdomínio precisa ser cadastrado.
 
 ## Onde mexer
 
